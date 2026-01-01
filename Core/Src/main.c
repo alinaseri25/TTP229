@@ -23,6 +23,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "usbd_cdc_if.h"
+#include "dwt_stm32_delay.h"
+#include "ssd1306.hpp"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -47,10 +49,11 @@ IWDG_HandleTypeDef hiwdg;
 TIM_HandleTypeDef htim4;
 
 /* USER CODE BEGIN PV */
-uint32_t nextLedTime;
+uint32_t nextLedTime,nextKeyRead;
 uint16_t ttpState;
 uint8_t flag;
-uint8_t key_array[16];
+uint8_t key_array[16],Buffer[200];
+SSD1306_OLED OLED(&hi2c1);
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -62,21 +65,26 @@ static void MX_TIM4_Init(void);
 /* USER CODE BEGIN PFP */
 void delay_us(uint32_t us);
 uint16_t TTP229_ReadKeys(void);
+void putStrUSB(uint8_t *Buf,uint32_t len = 0);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void USBRcv(uint8_t* Buf, uint16_t Len)
 {
-	
+	sprintf((char*)(Buffer),"RCV : %s",(char*)(Buf));
+	putStrUSB(Buffer);
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-  if(GPIO_Pin == TTPSDO_Pin)
-	{
-		flag = 1;
-	}
+//  if(GPIO_Pin == TTPSDO_Pin)
+//	{
+//		if(flag == 0)
+//		{
+//			flag = 1;
+//		}
+//	}
 }
 
 void delay_us(uint32_t us)
@@ -94,7 +102,7 @@ uint16_t TTP229_ReadKeys(void)
     {
         // CLK HIGH
         HAL_GPIO_WritePin(TTPClk_GPIO_Port, TTPClk_Pin, GPIO_PIN_SET);
-        delay_us(1);   // High time
+        delay_us(4);   // High time
 
         // Read DATA (LSB first)
         if (HAL_GPIO_ReadPin(TTPSDO_GPIO_Port, TTPSDO_Pin) == GPIO_PIN_SET)
@@ -104,12 +112,13 @@ uint16_t TTP229_ReadKeys(void)
 
         // CLK LOW
         HAL_GPIO_WritePin(TTPClk_GPIO_Port, TTPClk_Pin, GPIO_PIN_RESET);
-        delay_us(1);   // Low time
+        delay_us(4);   // Low time
     }
 
 		for (uint8_t i = 0; i < 16; i++)
     {
         key_array[i] = (keys >> i) & 0x01;
+				
     }
     return keys;
 }
@@ -151,7 +160,14 @@ int main(void)
   /* USER CODE BEGIN 2 */
 	HAL_TIM_Base_Start_IT(&htim4);
 	nextLedTime = HAL_GetTick() + 500;
+	nextKeyRead = HAL_GetTick() + 50;
 	flag = 0;
+	DWT_Delay_Init();
+	HAL_IWDG_Refresh(&hiwdg);
+	OLED.Init();
+	OLED.Fill(Black);
+	OLED.UpdateScreen();
+	HAL_IWDG_Refresh(&hiwdg);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -163,13 +179,20 @@ int main(void)
 		{
 			HAL_GPIO_TogglePin(LED_GPIO_Port,LED_Pin);
 			nextLedTime = HAL_GetTick() + 500;
+			sprintf((char *)Buffer,"NE : %07d", nextLedTime);
+			OLED.SetCursor(0,30);
+			OLED.WriteString(Buffer,Font_7x10,White,true);
+			OLED.UpdateScreen();
 		}
-		if(flag == 1)
+		if(nextKeyRead >= HAL_GetTick())
 		{
-			flag = 1;
-			HAL_NVIC_DisableIRQ(TTPSDO_EXTI_IRQn);
+			nextKeyRead = HAL_GetTick() + 50;
+			//HAL_NVIC_DisableIRQ(TTPSDO_EXTI_IRQn);
 			ttpState = TTP229_ReadKeys();
-			HAL_NVIC_EnableIRQ(TTPSDO_EXTI_IRQn);
+			sprintf((char *)Buffer,"0x%04X\r\n",ttpState);
+			//HAL_NVIC_EnableIRQ(TTPSDO_EXTI_IRQn);
+			putStrUSB(Buffer);
+			flag = 0;
 		}
     /* USER CODE END WHILE */
 
@@ -245,7 +268,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.ClockSpeed = 400000;
   hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
@@ -390,6 +413,18 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void putStrUSB(uint8_t *Buf,uint32_t len)
+{
+	if (len == 0)
+	{
+		while(Buf[len] != NULL)
+		{
+			len++;
+		}
+	}
+	
+	CDC_Transmit_FS(Buf,len);
+}
 
 /* USER CODE END 4 */
 

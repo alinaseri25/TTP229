@@ -1,4 +1,5 @@
-ttp229/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
+ttp229/fonts.o: ..\..\Libraries\OLEDI2C\fonts.c \
+  ..\..\Libraries\OLEDI2C\fonts.h \
   ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal.h \
   ..\Core\Inc\stm32f1xx_hal_conf.h \
   ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc.h \
@@ -6,8 +7,6 @@ ttp229/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
   ..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f1xx.h \
   ..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\stm32f103xb.h \
   ..\Drivers\CMSIS\Include\core_cm3.h \
-  C:\Keil_v5\ARM\ARMCLANG\include\libcxx\stdint.h \
-  C:\Keil_v5\ARM\ARMCLANG\include\libcxx\__config \
   C:\Keil_v5\ARM\ARMCLANG\include\stdint.h \
   D:\my_Projects\Electronic\STM32\F1\Keil\TTP229\Drivers\CMSIS\Include\cmsis_version.h \
   D:\my_Projects\Electronic\STM32\F1\Keil\TTP229\Drivers\CMSIS\Include\cmsis_compiler.h \
@@ -16,7 +15,6 @@ ttp229/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
   C:\Keil_v5\ARM\ARMCLANG\include\arm_acle.h \
   ..\Drivers\CMSIS\Device\ST\STM32F1xx\Include\system_stm32f1xx.h \
   ..\Drivers\STM32F1xx_HAL_Driver\Inc\Legacy\stm32_hal_legacy.h \
-  C:\Keil_v5\ARM\ARMCLANG\include\libcxx\stddef.h \
   C:\Keil_v5\ARM\ARMCLANG\include\stddef.h \
   ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_rcc_ex.h \
   ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_gpio.h \
@@ -34,20 +32,4 @@ ttp229/main.o: ..\Core\Src\main.c ..\Core\Inc\main.h \
   ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_tim_ex.h \
   ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_pcd.h \
   ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_ll_usb.h \
-  ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_pcd_ex.h \
-  ..\USB_DEVICE\App\usb_device.h \
-  ..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_def.h \
-  ..\USB_DEVICE\Target\usbd_conf.h \
-  C:\Keil_v5\ARM\ARMCLANG\include\libcxx\stdio.h \
-  C:\Keil_v5\ARM\ARMCLANG\include\stdio.h \
-  C:\Keil_v5\ARM\ARMCLANG\include\libcxx\stdlib.h \
-  C:\Keil_v5\ARM\ARMCLANG\include\stdlib.h \
-  C:\Keil_v5\ARM\ARMCLANG\include\libcxx\string.h \
-  C:\Keil_v5\ARM\ARMCLANG\include\string.h \
-  ..\USB_DEVICE\App\usbd_cdc_if.h \
-  ..\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Inc\usbd_cdc.h \
-  ..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_ioreq.h \
-  ..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_core.h \
-  ..\Middlewares\ST\STM32_USB_Device_Library\Core\Inc\usbd_ctlreq.h \
-  ..\..\Libraries\DWT_Delay\dwt_stm32_delay.h \
-  ..\..\Libraries\OLEDI2C\ssd1306.hpp ..\..\Libraries\OLEDI2C\fonts.h
+  ..\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_pcd_ex.h

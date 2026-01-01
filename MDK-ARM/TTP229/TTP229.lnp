@@ -30,6 +30,9 @@
 "ttp229\usbd_ctlreq.o"
 "ttp229\usbd_ioreq.o"
 "ttp229\usbd_cdc.o"
+"ttp229\dwt_stm32_delay.o"
+"ttp229\ssd1306.o"
+"ttp229\fonts.o"
 --strict --scatter "TTP229\TTP229.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
